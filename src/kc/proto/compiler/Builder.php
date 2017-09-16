@@ -128,7 +128,7 @@ class Builder
 				$field['real_type']	= self::getClassType($type_name, $field['type']);
 
 				$field['type_name'] = $field['real_type'] == 'enum' ? 'int' : $type_name;
-				$field['is_class'] = $field['type_name'][0] >= 'A' && $field['type_name'][0] <= 'Z';
+				$field['is_class'] = strpos($field['type_name'], '\\') !== false || $field['type_name'][0] >= 'A' && $field['type_name'][0] <= 'Z';
 			}
 		}
 
