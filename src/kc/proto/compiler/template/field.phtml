@@ -1,0 +1,47 @@
+
+	/**
+	* Method for field $<?= $name ?>
+
+	**/
+
+<? if($rule == 'repeated') : ?>
+	public function set<?= $Name ?>(array $value){
+		$this-><?= $name ?> = $value;
+	}
+
+	public function get<?= $Name ?>(): array {
+		return $this-><?= $name ?>;
+	}
+
+	public function add<?= $Name ?>(<?= $type_name ? ($is_class ? '\\' : '') . "$type_name " : '' ?>$value){
+		$this-><?= $name ?>[] = $value;
+	}
+
+	public function has<?= $Name ?>(): boolean {
+		return !empty($this-><?= $name ?>);
+	}
+
+	public function count<?= $Name ?>(): int {
+		return count($this-><?= $name ?>);
+	}
+
+	public function clear<?= $Name ?>(){
+		$this-><?= $name ?> = [];
+	}
+<? else: ?>
+	public function set<?= $Name ?>(<?= $type_name ? ($is_class ? '\\' : '') . "$type_name " : '' ?>$value){
+		$this-><?= $name ?> = $value;
+	}
+
+	public function get<?= $Name ?>()<?= $type_name ? ": " . ($is_class ? '\\' : '') . "$type_name " : '' ?>{
+		return $this-><?= $name ?>;
+	}
+
+	public function has<?= $Name ?>(): boolean {
+		return !is_null($this-><?= $name ?>);
+	}
+
+	public function clear<?= $Name ?>(){
+		$this-><?= $name ?> = null;
+	}
+<? endif ?>

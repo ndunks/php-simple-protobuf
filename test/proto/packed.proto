@@ -1,0 +1,10 @@
+// KC Proto Test
+syntax = "proto2";   // Proto test
+
+message Packed {
+
+	optional string name = 1;
+	repeated sint64 numbers = 2 [packed=true];
+	optional int32 age = 3;
+}
+

@@ -1,0 +1,9 @@
+// KC Proto Test
+syntax = "proto2";
+option java_package="kc.prototest";
+
+message SimpleGroup {
+  optional group Child = 3 {
+    required string url = 5;
+  }
+}

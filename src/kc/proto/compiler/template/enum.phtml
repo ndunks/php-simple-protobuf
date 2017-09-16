@@ -1,0 +1,15 @@
+<? if( !empty($namespace) ): ?>
+namespace <?= $namespace ?>;
+<? endif ?>
+
+class <?= $name ?> extends \kc\proto\Enum{
+<? foreach ($field as $key => $value) : ?>
+	const <?= $key ?> = <?= $value ?>;
+<? endforeach ?>
+
+	const FIELDS	= [
+<? foreach ($field as $key => $value) : ?>
+		self::<?= $key ?> => '<?= $key ?>',
+<? endforeach ?>	
+	];
+}

@@ -1,0 +1,6 @@
+/*.cmd
+/tmp
+/composer.lock
+/vendor
+/test/result/
+/test/out/

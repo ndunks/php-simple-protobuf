@@ -1,0 +1,8 @@
+syntax = "proto2";   // Proto test
+
+message Simple {
+
+	required string name = 1;
+	optional string address = 2;
+	optional int32 age = 3;
+}

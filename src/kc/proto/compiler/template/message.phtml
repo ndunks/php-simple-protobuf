@@ -1,0 +1,27 @@
+<? if( !empty($namespace) ): ?>
+namespace <?= $namespace ?>;
+<? endif ?>
+
+class <?= $name ?> extends \kc\proto\Message {
+<? foreach ($field as &$value) : ?>
+	/**
+	 * type  <?= ($value['rule'] == 'repeated' ? 'Array of ' : '') . $value['type_name'] ?>, number: <?= $value['number'] ?>
+
+	 */
+<? if($value['rule'] == 'repeated') : ?>
+	var $<?= $value['name'] ?> = [];
+<? else: ?>
+	var $<?= $value['name'] ?>;
+<? endif ?>
+<? endforeach ?>
+
+	const FIELDS	= [
+<? foreach ($field as &$value) : ?>
+	<?= $value['number'] ?> => [ '<?= $value['name'] ?>',	self::TYPE_<?= strtoupper($value['real_type']) ?>,	self::RULE_<?= strtoupper($value['rule']) ?>,	<?= (isset($value['options']) && @$value['options']['packed'] ) ? 'true' : 'false' ?>,	'<?= $value['php_type'] ?>'],
+<? endforeach ?>	
+	];
+
+<? foreach ($field as &$value) {
+		$this->render('field', $value);
+} ?>
+}

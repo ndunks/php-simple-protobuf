@@ -1,0 +1,8 @@
+// KC Proto Test
+syntax = "proto2";
+
+message SimpleGroup {
+  optional group Child = 1 {
+    required string url = 1;
+  }
+}

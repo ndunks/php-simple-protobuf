@@ -1,0 +1,23 @@
+syntax = "proto2";   // Proto test
+option java_package="kc.prototest";
+message Group {
+
+    optional string name = 1;
+
+    repeated group Result = 2 {
+        required string url = 1;
+        optional int32 count = 2;
+        optional group Info = 3 {
+            required string title = 1;
+            optional string date = 2;
+        }
+    }
+
+    enum Enum {
+        A = 0;
+        B = 1;
+        C = 2;
+    }
+
+    repeated Enum enum = 3 [packed=true];
+}

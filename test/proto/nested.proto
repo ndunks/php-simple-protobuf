@@ -1,0 +1,25 @@
+// KC Proto Test
+syntax = "proto2";   // Proto test
+package nested; //Property
+
+message Man {
+
+	enum Wife {
+		NOT_HAVE = 0;
+	  ANA = 1;
+	  LENA = 2;
+	  CHIZ = 3;
+	}
+
+	message Child {
+		required string name = 1;
+		optional int32 age = 2;
+	}
+
+	required string name = 1;
+	optional int32 age = 2;
+	optional Wife wife = 3;
+	repeated Child child = 4;
+
+}
+
