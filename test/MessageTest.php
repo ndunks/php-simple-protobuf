@@ -19,7 +19,7 @@ class MessageTest extends PHPUnit\Framework\TestCase
 		$obj->setAddress('Indonesia');
 		$obj->setAge(25);
 
-		$json_str	= $obj->toJson();
+		$json_str	= $obj->toJson(true);
 
 		$json = json_decode( $json_str, true);
 		$this->assertEquals('user', $json['name']);
@@ -50,7 +50,7 @@ class MessageTest extends PHPUnit\Framework\TestCase
 		$obj->setName('user');
 		$obj->setAge(25);
 		$obj->setWife(\nested\Man\Wife::ANA);
-		$json_str	= $obj->toJson();
+		$json_str	= $obj->toJson(true);
 		$json		= json_decode($json_str, true);
 		$this->assertEquals('user', $json['name']);
 		$this->assertEquals(25, $json['age']);
@@ -68,7 +68,7 @@ class MessageTest extends PHPUnit\Framework\TestCase
 		$obj->setAge(18);
 		$obj->setWife(\nested\Man\Wife::CHIZ);
 
-		$json_str	= $obj->toJson();
+		$json_str	= $obj->toJson(true);
 		$json		= json_decode($json_str, true);
 
 		$new = new \nested\Man($json_str);
@@ -131,7 +131,7 @@ class MessageTest extends PHPUnit\Framework\TestCase
 		$obj->setWife(nested\Man\Wife::ANA);
 
 		$bin	= $obj->toString();
-		$json	= $obj->toJson();
+		$json	= $obj->toJson(true);
 
 		file_put_contents(__DIR__ . '/result/nested_1.bin', $bin);
 		file_put_contents(__DIR__ . '/result/nested_1.json', $json);
@@ -145,7 +145,7 @@ class MessageTest extends PHPUnit\Framework\TestCase
 		$obj->setWife(nested\Man\Wife::CHIZ);
 
 		$bin	= $obj->toString();
-		$json	= $obj->toJson();
+		$json	= $obj->toJson(true);
 
 		file_put_contents(__DIR__ . '/result/nested_2.bin', $bin);
 		file_put_contents(__DIR__ . '/result/nested_2.json', $json);
@@ -269,6 +269,7 @@ class MessageTest extends PHPUnit\Framework\TestCase
 		$file= __DIR__ . '/corection/nested_1.proto3.bin';
 		$new = new \kc\proto\Unknown( Reader::fromFile($file) );
 		$this->assertEquals('user',  $new->__getUnknown()[1]);
+		file_put_contents(__DIR__ . '/result/unknown_field.json', $new->toJson(true));
 	}
 
 }

@@ -161,7 +161,7 @@ class Builder
 			case 'double':
 			case 'float':
 				return 'float';
-				break;
+				
 			case 'int':
 			case 'int64':
 			case 'int32':
@@ -174,20 +174,16 @@ class Builder
 			case 'sfixed32':
 			case 'sfixed64':
 				return 'int';
-				break;
 
 			case 'bool':
 				return 'boolean';
-				break;
 
 			case 'string':
 			case 'bytes':
 				return 'string';
-				break;
 
 			default:
 				return false;
-				break;
 		}
 	}
 

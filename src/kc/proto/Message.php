@@ -59,12 +59,13 @@ abstract class Message
         }elseif(is_string($data))
         {
             if($data[0] == '{')
-                serializer\NativeArray::import(json_decode($data, true), $this);
+                serializer\Json::import($data, $this);
             else 
                 serializer\Native::import(new Reader($data), $this);
         }
     
 	}
+    
     function __addUnknown($number, $raw)
     {
         
@@ -85,9 +86,19 @@ abstract class Message
         }
     }
 
+    function __setUnknown($data)
+    {
+        $this->__unknown = $data;
+    }
+
     function __getUnknown()
     {
         return $this->__unknown;   
+    }
+
+    function __hasUnknown()
+    {
+        return isset($this->__unknown) && count($this->__unknown) > 0;
     }
 
     function getProtoFields(): Array {
@@ -103,8 +114,8 @@ abstract class Message
         return serializer\NativeArray::export($this);
     }
 
-    function toJson($beautify = true): String {
-        return json_encode($this->toArray(), $beautify ? JSON_PRETTY_PRINT : 0);
+    function toJson(): String {
+        return serializer\Json::export($this);
     }
 
     function get($name)
@@ -120,6 +131,11 @@ abstract class Message
     function set($name, $value)
     {
         $this->$name    = $value;
+    }
+    
+    function clear($name)
+    {
+        $this->$name = is_array($this->$name) ? [] : null;
     }
 
 }

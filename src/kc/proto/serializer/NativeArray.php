@@ -15,7 +15,7 @@ class NativeArray implements Serializer
 	{
 		if(!function_exists('json_encode'))
             throw new Exception("Require JSON PHP Extension");
-            
+        //echo "\nexporting " . get_class($message);
         $result = [];
 
         $fields = $message->getProtoFields();
@@ -54,6 +54,10 @@ class NativeArray implements Serializer
             	$result[ $name ] = $value;
             }
         }
+        if($message->__hasUnknown())
+        {
+        	$result['__unknown'] = $message->__getUnknown();
+        }
         return $result;
 	}
 
@@ -70,7 +74,7 @@ class NativeArray implements Serializer
 			case Message::TYPE_MESSAGE:
 				if(! is_subclass_of($value, 'kc\\proto\\Message', false) )
 					throw new Exception($field[ Message::PROTO_NAME ] . " is not instance of \\kc\\proto\\Message");
-				return $value->toArray();
+				return self::export($value);//->toArray();
 				break;
 			default:
 				return $value;
@@ -94,7 +98,8 @@ class NativeArray implements Serializer
             		continue;
 
             	if( !is_array($value) )
-            		throw new Exception("Invalid data on $name");
+            		continue;
+            		//throw new Exception("Invalid data on $name");
 
             	foreach ($value as $k => &$v) {
             		$val = self::importField($proto, $v);
@@ -114,9 +119,23 @@ class NativeArray implements Serializer
 	            	$message->set($name, $value);
 	            }
             }
+            //clear to detect unknown;
+            unset($data[$name]);
 
 
         }
+        if( isset($data['__unknown']) && is_array($data['__unknown']) ){
+        	$message->__setUnknown($data['__unknown']);
+        	unset($data['__unknown']);
+        }
+        if( !empty($data) )
+        {
+        	foreach ($data as $key => $value)
+        	{
+        		$message->__addUnknown($key, $value);
+        	}
+        }
+
 	}
 
 	public static function importField( &$field, &$value)

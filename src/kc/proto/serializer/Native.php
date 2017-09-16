@@ -18,6 +18,7 @@ class Native implements Serializer
 		if( is_null($writer) )
 			$writer = new Writer();
 		
+		
 		foreach ($message->getProtoFields() as $number => &$field)
 		{
 			$name   = $field[ Message::PROTO_NAME ];
