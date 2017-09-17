@@ -9,7 +9,7 @@ use \kc\proto\serializer\native\Util;
 use \Exception;
 
 /**
-* 
+* Native serializer to binary file
 */
 class Native implements Serializer
 {
