@@ -21,6 +21,7 @@ class CompilerTest extends PHPUnit\Framework\TestCase
 
 		$protos = [
 					'simple.proto'	=> ['Simple.php'],
+					'namespaced.proto'	=> ['namespaced/Simple.php'],
 					'nested.proto'	=> [
 								'nested/Man.php',
 								'nested/Man/Wife.php',

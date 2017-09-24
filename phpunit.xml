@@ -1,10 +1,10 @@
 <phpunit colors="true" bootstrap="test/bootstrap.php">
     <testsuites>
         <testsuite name="PHP Simple Protocol Buffer">
-            <!-- <directory>./test/</directory> -->
             <file>test/BufferTest.php</file>
             <file>test/CompilerTest.php</file>
             <file>test/MessageTest.php</file>
+            <directory>./test/</directory>
         </testsuite>
     </testsuites>
 </phpunit>

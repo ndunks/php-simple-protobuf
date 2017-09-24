@@ -1,0 +1,9 @@
+syntax = "proto2";   // Proto test
+package namespaced;
+message Simple {
+
+	required string name = 1;
+	optional string address = 2;
+	optional int32 age = 3;
+	optional bool male = 4;
+}

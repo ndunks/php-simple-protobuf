@@ -1,14 +1,69 @@
 <?php
 
-use kc\proto\serializer\native\Reader;
 /**
 * @group msg
 */
+
+use kc\proto\serializer\native\Reader;
+
 class MessageTest extends PHPUnit\Framework\TestCase
 {
+	function testCallable()	
+	{
+		include_once 'out/autoload.php';
+		/**
+		* 
+		*/
+		$obj = new MyTestMessage();
+		$obj->addAge(10);
+		$this->assertEquals(10, $obj->getAge());
+		$obj->clearAge();
 
-	private static $importantFields = [];
-	
+		$obj->setName('user');
+		$obj->setAddress('Indonesia');
+		$obj->setAge(25);
+		$json_str	= $obj->toJson(true);
+
+		$json = json_decode( $json_str, true);
+		$this->assertEquals('user', $json['name']);
+		$this->assertEquals(25, $json['age']);
+
+		$this->assertTrue($obj->hasName());
+		$this->assertTrue($obj->hasAge());
+
+		$obj->addAge(10);
+		$this->assertEquals(35, $obj->getAge());
+		$obj->addName('XX');
+		$this->assertEquals('userXX', $obj->getName());
+		$obj->clearAddress();
+		$this->assertEquals(null, $obj->getAddress());
+	}
+
+	function testNamespaced()
+	{
+		include_once 'out/autoload.php';
+		$obj = new \namespaced\Simple();
+		$this->assertEquals(\namespaced\Simple::FIELDS, $obj->getProtoFields());
+
+		$obj->setName('user');
+		$obj->setAddress('Indonesia');
+		$obj->setAge(25);
+		$obj->setMale(true);
+
+		$json_str	= $obj->toJson(true);
+
+		$json = json_decode( $json_str, true);
+		$this->assertEquals('user', $json['name']);
+		$this->assertEquals(25, $json['age']);
+
+		$new = new namespaced\Simple($json_str);
+		$this->assertEquals($new->getName(), $obj->getName());
+		$this->assertEquals($new->getAddress(), $obj->getAddress());
+		$this->assertEquals($new->getAge(), $obj->getAge());
+
+		//Nested
+	}
+
 	function testJsonSimple()
 	{
 		include_once 'out/autoload.php';
@@ -272,4 +327,16 @@ class MessageTest extends PHPUnit\Framework\TestCase
 		file_put_contents(__DIR__ . '/result/unknown_field.json', $new->toJson(true));
 	}
 
+}
+class MyTestMessage extends \kc\proto\Message
+{
+	var $name;
+	var $address;
+	var $age;
+
+	const FIELDS	= [
+		1 => [ 'name',	self::TYPE_STRING,	self::RULE_REQUIRED,	false,	'string'],
+		2 => [ 'address',	self::TYPE_STRING,	self::RULE_OPTIONAL,	false,	'string'],
+		3 => [ 'age',	self::TYPE_INT32,	self::RULE_OPTIONAL,	false,	'int'],
+	];
 }
