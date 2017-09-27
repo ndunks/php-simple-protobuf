@@ -16,7 +16,10 @@ class Json implements Serializer
 	
 	public static function export(Message $message)
 	{
-		$array	= NativeArray::export( $message );
+		$array	= NativeArray::export( $message, NativeArray::OPTION_EXPORT_FOR_JSON );
+		//Check for empty array
+		/*if( empty( $array ) )
+			return '{}';*/
 		//Unknown field may threat as non ASCII
 		self::maping($array, 'utf8_encode');
 

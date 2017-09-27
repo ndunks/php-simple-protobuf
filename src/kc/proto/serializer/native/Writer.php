@@ -41,7 +41,7 @@ class Writer
     function writeBytes(Array $values)
     {
         $writen = 0;
-        for($i = 0; $i < count($value); $i++) {
+        for($i = 0; $i < count($values); $i++) {
             $this->data .= chr($values[$i]);
             $writen++;
         }
@@ -90,7 +90,7 @@ class Writer
 
             case Message::TYPE_INT64:
             case Message::TYPE_UINT64:
-                return $this->writeVarint64($value) + $writen;
+                return $this->writeVarint($value) + $writen;
 
             case Message::TYPE_INT32:
             case Message::TYPE_ENUM:

@@ -372,6 +372,11 @@ abstract class Message
        return serializer\Native::export($this);
     }
 
+    function __toString()
+    {
+        return serializer\Native::export($this);
+    }
+
     function toArray(): Array {
         return serializer\NativeArray::export($this);
     }

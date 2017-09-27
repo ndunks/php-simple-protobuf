@@ -10,8 +10,9 @@ use \Exception;
 */
 class NativeArray implements Serializer
 {
+    public const OPTION_EXPORT_FOR_JSON = 1;
 	
-	public static function export(Message $message)
+	public static function export(Message $message, int $option = null)
 	{
 		if(!function_exists('json_encode'))
             throw new Exception("Require JSON PHP Extension");
@@ -33,7 +34,7 @@ class NativeArray implements Serializer
                 $new_value = [];
                 foreach ($value as &$val)
                 {
-                	$tmp = self::exportField($proto, $val);
+                	$tmp = self::exportField($proto, $val, $option);
                 	if(!is_null($tmp))
                 		$new_value[] = $tmp;
                 }
@@ -44,7 +45,7 @@ class NativeArray implements Serializer
                 $result[ $name ] = $new_value;
             }else
             {
-	            $value = self::exportField($proto, $value);
+	            $value = self::exportField($proto, $value, $option);
 	            if( is_null($value) )
 	            {
 		            if( $rule == Message::RULE_REQUIRED )
@@ -61,7 +62,7 @@ class NativeArray implements Serializer
         return $result;
 	}
 
-	public static function exportField( &$field, &$value)
+	public static function exportField( &$field, &$value, int $option = null)
 	{
 		if(is_null($value)) return null;
 
@@ -74,7 +75,11 @@ class NativeArray implements Serializer
 			case Message::TYPE_MESSAGE:
 				if(! is_subclass_of($value, 'kc\\proto\\Message', false) )
 					throw new Exception($field[ Message::PROTO_NAME ] . " is not instance of \\kc\\proto\\Message");
-				return self::export($value);//->toArray();
+				$exported = self::export($value);//->toArray();
+                if( $option == self::OPTION_EXPORT_FOR_JSON ){
+                    return empty($exported) ?  new \StdClass() : $exported ;
+                }else return $exported;
+
 				break;
 			default:
 				return $value;

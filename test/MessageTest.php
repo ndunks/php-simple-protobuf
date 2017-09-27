@@ -327,16 +327,40 @@ class MessageTest extends PHPUnit\Framework\TestCase
 		file_put_contents(__DIR__ . '/result/unknown_field.json', $new->toJson(true));
 	}
 
+	function testEmptyChildMessage()
+	{
+		$my		= new MyTestMessage();
+		$child	= new MyTestMessage();
+		$my->setChild($child);
+		//deactivate pretty print
+		\kc\proto\serializer\Json::$JSON_OPTION = 0;
+		$json	= $my->toJson(false);
+		$raw	= $my->toString();
+		$this->assertEquals( '{"child":{}}', $json );
+		$new	= new MyTestMessage($json);
+		$new2	= new MyTestMessage($raw);
+		$this->assertEquals( '{"child":{}}', $new->toJson() );
+		$this->assertEquals( '{"child":{}}', $new2->toJson() );
+
+		$this->assertEquals( $raw, $new->toString() );
+		$this->assertEquals( $raw, $new2->toString() );
+
+		var_dump($my, $new, $new2);
+		print_r($my->toArray());
+	}
+
 }
 class MyTestMessage extends \kc\proto\Message
 {
 	var $name;
 	var $address;
 	var $age;
+	var $child;
 
 	const FIELDS	= [
-		1 => [ 'name',	self::TYPE_STRING,	self::RULE_REQUIRED,	false,	'string'],
+		1 => [ 'name',	self::TYPE_STRING,	self::RULE_OPTIONAL,	false,	'string'],
 		2 => [ 'address',	self::TYPE_STRING,	self::RULE_OPTIONAL,	false,	'string'],
 		3 => [ 'age',	self::TYPE_INT32,	self::RULE_OPTIONAL,	false,	'int'],
+		3 => [ 'child',	self::TYPE_MESSAGE,	self::RULE_OPTIONAL,	false,	'MyTestMessage'],
 	];
 }

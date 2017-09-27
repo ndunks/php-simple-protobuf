@@ -12,7 +12,7 @@ class Reader
 
 	private	$data = '';
 	public	$size, $pos = 0, $limit = false, $stack = [],
-            $tag, $marker = false, $marker_stack = [];
+            $tag, $marker = false, $marker_stack = [], $log_stack = [];
 
 	function __construct(String $data){
 		$this->data	= $data;
@@ -90,8 +90,18 @@ class Reader
 
     function readBytes(int $size)
     {
-        if(!$this->canRead($size))
-            throw new Exception("Not enough buffer to read pos: {$this->pos}, limit: {$this->limit}, avail: " . $this->available());
+        if(!$this->canRead($size)){
+            
+            $number     = Util::getTagFieldNumber($this->tag);
+            $wire_type  = Util::getTagWireType($this->tag);
+            $msg = "Not enough buffer to read on Tag number $number, wire $wire_type. " . 
+                    "Pos: {$this->pos}, need: $size, avail: " . $this->available() . ", limit: {$this->limit}";
+            if(defined('PROTO_DEBUG')){
+                $msg .= "\r\nFIELD STACK:\r\n" . implode("\r\n", $this->log_stack);
+            }
+
+            throw new Exception($msg);
+        }
             
         $data = substr($this->data, $this->pos, $size);
         $this->pos += $size;
@@ -140,6 +150,9 @@ class Reader
 
     function readValue(array $field)
     {
+        if(defined('PROTO_DEBUG'))
+            $this->log_stack[] = $field[Message::PROTO_NAME];
+
         switch ( $field[Message::PROTO_TYPE] ) {
             case Message::TYPE_DOUBLE:
                 $value = $this->readBytes(8);
@@ -183,6 +196,10 @@ class Reader
                 //Mark the tag of end group
                 $this->pushMarker($number << 3 | Util::WIRETYPE_END_GROUP);
                 $class = $field[Message::PROTO_CLASS];
+
+                if(defined('PROTO_DEBUG'))
+                    $this->log_stack[count($this->log_stack)-1] .= " ($class)";
+
                 $value    = new $class();
                 Native::import($this, $value);
                 if($this->tag !== $this->marker)
@@ -195,6 +212,10 @@ class Reader
                 $size = $this->readVarint64();
                 $this->pushLimit($size);
                 $class= $field[Message::PROTO_CLASS];
+
+                if(defined('PROTO_DEBUG'))
+                    $this->log_stack[count($this->log_stack)-1] .= " ($class)";
+                
                 $obj  = new $class();
 
                 Native::import($this, $obj);
