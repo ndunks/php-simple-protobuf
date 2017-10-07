@@ -100,8 +100,20 @@ abstract class Message
         if(empty($call) || empty($name))
             throw new Exception("Invalid call", 1);
 
-        if(!property_exists($this, $name))
-            throw new Exception("Undefined $name on " . get_called_class());
+        if(!property_exists($this, $name)){
+            switch ( $call ) {
+                case 'get':
+                    return null;
+                    break;
+                case 'has':
+                case 'is':
+                    return false;
+                    break;
+                default:
+                    throw new Exception("Undefined $name on " . get_called_class());
+                    break;
+            }
+        }
 
         switch ( $call ) {
             case 'get':
