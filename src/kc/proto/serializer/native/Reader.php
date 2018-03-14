@@ -17,6 +17,7 @@ class Reader
 	function __construct(String $data){
 		$this->data	= $data;
 		$this->size	= strlen($data);
+        ini_set('memory_limit', '-1');
 	}
 
     static function fromFile($file): Reader {
