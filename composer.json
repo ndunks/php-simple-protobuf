@@ -1,7 +1,6 @@
 {
     "name": "ndunks/php-simple-protobuf",
     "type": "library",
-    "version": "1.1",
     "license": "MIT",
     "authors": [
         {

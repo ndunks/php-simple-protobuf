@@ -414,7 +414,7 @@ abstract class Message
 
     function has($name)
     {
-        return is_array($this->name) ? count($this->name) > 0 : isset($this->name);
+        return is_array($this->$name) ? count($this->$name) > 0 : isset($this->$name);
     }
     
     function clear($name)
