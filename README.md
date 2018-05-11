@@ -46,4 +46,22 @@ $obj->setAge(25);
 $obj->toArray(); // as PHP Array
 $obj->toJson(); // as JSON formated string
 ````
+## Example on Linux
 
+Example Setup & installation on Linux
+make sure your php.ini (cli) has `short_open_tag` is `On`
+
+```
+git clone https://github.com/ndunks/php-simple-protobuf
+cd php-simple-protobuf
+composer dump-autoload
+```
+You can skip `composer install` if you want to use it (not develop it) because this project not depend to any other composer library.
+Run this to compile example proto (on project dir)
+```
+# if output directory not exist, you must create it manualy
+mkdir result
+# Compile it
+php bin/compiler.php --out=result --file=test/proto/simple.proto
+```
+Check on result dir, you will get `Simple.php` file generated from `simple.proto`
